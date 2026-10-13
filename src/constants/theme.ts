@@ -1,65 +1,66 @@
 /**
- * Below are the colors that are used in the app. The colors are defined in the light and dark mode.
- * There are many other ways to style your app. For example, [Nativewind](https://www.nativewind.dev/), [Tamagui](https://tamagui.dev/), [unistyles](https://reactnativeunistyles.vercel.app), etc.
+ * Тема: цвета (светлая и тёмная), отступы, скругления.
+ *
+ * В React Native нет CSS-переменных и каскада. Тема — обычный объект, а
+ * компонент берёт нужный набор цветов хуком useTheme() и подставляет в style.
+ * Правило проекта: в компонентах нет «сырых» цветов (#fff) и чисел отступов —
+ * только значения отсюда. Тогда тёмная тема и смена палитры — одно место.
  */
-
-import '@/global.css';
-
-import { Platform } from 'react-native';
+import { HabitColor } from '@/lib/habits';
 
 export const Colors = {
   light: {
-    text: '#000000',
-    background: '#ffffff',
-    backgroundElement: '#F0F0F3',
-    backgroundSelected: '#E0E1E6',
-    textSecondary: '#60646C',
+    background: '#F4F5F7',
+    card: '#FFFFFF',
+    cardPressed: '#F0F1F4',
+    text: '#14161B',
+    textSecondary: '#6B7280',
+    border: '#E4E6EB',
+    accent: '#14B87A',
+    accentText: '#FFFFFF',
+    danger: '#E5484D',
+    track: '#E7E9EE', // дорожки прогресса, пустые клетки
+    overlay: 'rgba(20, 22, 27, 0.45)',
   },
   dark: {
-    text: '#ffffff',
-    background: '#000000',
-    backgroundElement: '#212225',
-    backgroundSelected: '#2E3135',
-    textSecondary: '#B0B4BA',
+    background: '#0D0F12',
+    card: '#181B20',
+    cardPressed: '#20242B',
+    text: '#F2F4F7',
+    textSecondary: '#9AA3B2',
+    border: '#262A32',
+    accent: '#2FD18F',
+    accentText: '#07120D',
+    danger: '#FF6369',
+    track: '#262A32',
+    overlay: 'rgba(0, 0, 0, 0.6)',
   },
 } as const;
 
-export type ThemeColor = keyof typeof Colors.light & keyof typeof Colors.dark;
+export type Scheme = keyof typeof Colors;
+/** Набор цветов темы: одинаковые ключи, значения — любые строки (а не литералы светлой темы). */
+export type Theme = { [K in keyof typeof Colors.light]: string };
 
-export const Fonts = Platform.select({
-  ios: {
-    /** iOS `UIFontDescriptorSystemDesignDefault` */
-    sans: 'system-ui',
-    /** iOS `UIFontDescriptorSystemDesignSerif` */
-    serif: 'ui-serif',
-    /** iOS `UIFontDescriptorSystemDesignRounded` */
-    rounded: 'ui-rounded',
-    /** iOS `UIFontDescriptorSystemDesignMonospaced` */
-    mono: 'ui-monospace',
-  },
-  default: {
-    sans: 'normal',
-    serif: 'serif',
-    rounded: 'normal',
-    mono: 'monospace',
-  },
-  web: {
-    sans: 'var(--font-display)',
-    serif: 'var(--font-serif)',
-    rounded: 'var(--font-rounded)',
-    mono: 'var(--font-mono)',
-  },
-});
+/**
+ * Цвета привычек. У каждого — основной тон и «мягкий» фон под эмодзи для
+ * светлой и тёмной темы (на тёмном фоне пастель должна быть темнее).
+ */
+export const HabitPalette: Record<HabitColor, { main: string; soft: { light: string; dark: string } }> = {
+  mint: { main: '#14B87A', soft: { light: '#DDF6EA', dark: '#12382B' } },
+  blue: { main: '#3B82F6', soft: { light: '#DFEAFE', dark: '#172A4A' } },
+  violet: { main: '#8B5CF6', soft: { light: '#EAE2FE', dark: '#2B2150' } },
+  pink: { main: '#EC4899', soft: { light: '#FCE1EF', dark: '#4A1A33' } },
+  orange: { main: '#F97316', soft: { light: '#FEE7D5', dark: '#4A2610' } },
+  yellow: { main: '#EAB308', soft: { light: '#FBF1CC', dark: '#44360A' } },
+};
 
-export const Spacing = {
-  half: 2,
-  one: 4,
-  two: 8,
-  three: 16,
-  four: 24,
-  five: 32,
-  six: 64,
-} as const;
+/** Шаг отступов — 4. Spacing[4] = 16. Числа «из головы» в стилях не пишем. */
+export const Spacing = { 1: 4, 2: 8, 3: 12, 4: 16, 5: 20, 6: 24, 8: 32, 10: 40 } as const;
 
-export const BottomTabInset = Platform.select({ ios: 50, android: 80 }) ?? 0;
-export const MaxContentWidth = 800;
+export const Radius = { sm: 8, md: 12, lg: 16, xl: 24, full: 999 } as const;
+
+/** На широком экране (планшет, браузер) содержимое не растягивается шире этого. */
+export const MaxContentWidth = 560;
+
+/** Минимальный размер области нажатия (рекомендации Apple — 44, Google — 48). */
+export const HitSize = 44;

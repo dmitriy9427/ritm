@@ -1,56 +1,72 @@
-# Welcome to your Expo app 👋
+# Ритм — трекер привычек
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Мобильное приложение на **React Native + Expo**: один код работает на iOS, Android и в
+браузере. Привычки по дням недели, счётчики («8 стаканов воды»), серии, статистика с
+«тепловой картой», напоминания. Данные хранятся на устройстве, интернет не нужен.
 
-## Get started
+**Демо в браузере:** https://dmitriy9427.github.io/ritm/ · **Учебник:** [docs/](docs/README.md)
 
-1. Install dependencies
+| Светлая тема | Тёмная тема |
+| --- | --- |
+| ![Экраны приложения, светлая тема](docs/screenshots/light.webp) | ![Экраны приложения, тёмная тема](docs/screenshots/dark.webp) |
 
-   ```bash
-   npm install
-   ```
+## Что внутри
 
-2. Start the app
+- **Три экрана на вкладках и модальная форма** — Expo Router (файловая навигация).
+- **Отметка нажатием или свайпом** — Gesture Handler + Reanimated, анимация в UI-потоке.
+- **Кольцо прогресса дня** — анимированный SVG.
+- **Серии и статистика** — чистые функции с тестами: дни вне расписания серию не рвут,
+  незаконченное «сегодня» — тоже.
+- **Хранение на устройстве** — Zustand + AsyncStorage, версия данных и ожидание гидрации.
+- **Напоминания** — локальные уведомления по дням недели, с запросом разрешения.
+- **Вибрация** — три вида тактильного отклика, отключается в настройках.
+- **Светлая и тёмная тема**, безопасные зоны, доступность (подписи и роли для скринридеров).
 
-   ```bash
-   npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+## Запуск
 
 ```bash
-npm run reset-project
+npm install
+npm start
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+- **На телефоне:** установите Expo Go (App Store / Google Play) и отсканируйте QR-код из
+  терминала. Телефон и компьютер — в одной сети Wi-Fi. Xcode и Android Studio не нужны.
+- **В браузере:** нажмите `w` в терминале или запустите `npm run web`.
 
-### Other setup steps
+Подробно — [docs/02-running.md](docs/02-running.md).
 
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
+## Команды
 
-## Learn more
+| Команда | Что делает |
+| --- | --- |
+| `npm start` | dev-сервер: QR-код для телефона, `w` — браузер |
+| `npm run web` | сразу в браузере |
+| `npm run check` | линтер + типы + тесты |
+| `npm test` | 30 тестов логики (Jest) |
+| `npm run export:web` | веб-сборка в `dist/` |
 
-To learn more about developing your project with Expo, look at the following resources:
+## Стек
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+Expo SDK 57 · React Native 0.86 · React 19 · TypeScript · Expo Router · Zustand ·
+Reanimated 4 · Gesture Handler · react-native-svg · expo-notifications · expo-haptics · Jest
 
-## Join the community
+## Структура
 
-Join our community of developers creating universal apps.
+```
+src/
+├── app/           экраны (файл = экран): вкладки и форма привычки
+├── components/    карточка привычки, кольцо, графики, базовые элементы
+├── lib/           чистая логика: даты, серии, статистика (+ тесты)
+├── store/         состояние и сохранение на устройстве
+├── platform/      вибрация, уведомления, диалоги — различия платформ
+├── hooks/         тема, «сегодня»
+└── constants/     цвета, отступы
+docs/              учебник: 9 глав, разбор багов, вопросы к собеседованию
+```
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+## Учебник
+
+Для тех, кто знает React для веба и хочет разобраться в мобильной разработке:
+[с чего начать](docs/README.md) · [словарь «веб → React Native»](docs/03-web-to-native.md) ·
+[анимации и жесты](docs/07-animations.md) · [найденные баги](docs/lessons.md) ·
+[вопросы к собеседованию](docs/interview.md).
