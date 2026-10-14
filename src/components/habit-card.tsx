@@ -16,6 +16,12 @@
  * activeOffsetX / failOffsetY — главная настройка для жеста внутри списка:
  * жест «включается» только при движении ВПРАВО больше 14px и сдаётся, если
  * палец пошёл по вертикали. Без этого карточки мешали бы прокручивать список.
+ *
+ * В браузере этого мало: Gesture Handler по умолчанию ставит карточке CSS
+ * `touch-action: none` — браузер отдаёт ВСЕ касания жесту и сам страницу не
+ * прокручивает. Карточки занимают почти весь экран, и список на телефоне не
+ * листался. touchAction="pan-y": вертикальную прокрутку делает браузер, а
+ * горизонтальное смахивание остаётся жесту. На iOS и Android проп не влияет.
  */
 import { Ionicons } from '@expo/vector-icons';
 import { useEffect } from 'react';
@@ -131,7 +137,7 @@ export function HabitCard({ habit, count, streak, onToggle, onEdit }: Props) {
         </Animated.View>
       </Animated.View>
 
-      <GestureDetector gesture={swipe}>
+      <GestureDetector gesture={swipe} touchAction="pan-y">
         <Animated.View style={cardStyle}>
           <Pressable
             accessibilityRole="button"
