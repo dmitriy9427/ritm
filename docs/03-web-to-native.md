@@ -105,3 +105,38 @@ const styles = StyleSheet.create({
 React: компоненты, пропсы, `useState`, `useEffect`, `useMemo`, контекст, `key` в списках.
 TypeScript. Zustand, TanStack Query, React Hook Form, date-fns, lodash — всё, что не
 касается DOM. `fetch`, `async/await`, модули. Тесты на Jest.
+
+## Ошибки
+
+> **Текст прямо в `View`** (`<View>Привет</View>`) — красный экран «Text strings must be rendered
+> within a <Text> component». Любая строка — внутри `<Text>`.
+>
+> **`flexDirection` забыли.** В React Native flexbox по умолчанию **столбцом**. Ряд — явно
+> `flexDirection: 'row'`.
+>
+> **Единицы в стилях** (`padding: '16px'`). Числа без единиц — это «точки» экрана: `padding: 16`.
+>
+> **`onClick`** вместо `onPress` — нажатие не сработает.
+>
+> **Каскад стилей.** Его нет: цвет текста не наследуется от `View`. Только `Text` внутри `Text`.
+
+## Попробуйте сами
+
+1. Переведите на React Native: `<div class="row"><img src="a.png"><span>Вода</span></div>`.
+2. Почему у `Pressable` стиль бывает функцией `({ pressed }) => …`?
+3. Где в «Ритме» задан общий шрифт и цвет текста, если каскада нет?
+
+<details>
+<summary>Ответы</summary>
+
+1. ```tsx
+   <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+     <Image source={require('./a.png')} style={{ width: 24, height: 24 }} />
+     <Text>Вода</Text>
+   </View>
+   ```
+   У `Image` размер обязателен.
+2. Так рисуют состояние «нажато» (аналог `:active`) — в React Native нет псевдоклассов.
+3. В своём компоненте `AppText` (`src/components/ui.tsx`): он берёт цвет из темы и варианты
+   размера. Везде используется он, а не голый `Text`.
+</details>
